@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "~/layouts/Layout.astro";
+
+const rockets = await getCollection("rockets");
+---
+
+<Layout title="Rockets">
+	<h1>My fun rocket list!</h1>
+
+	<ul>
+		{
+			rockets.map((rocket) => (
+				<li>
+					<a href={`/rockets/${rocket.id}`} data-astro-prefetch>
+						{rocket.data.name}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<a href="/">Back to homepage</a>
+</Layout>

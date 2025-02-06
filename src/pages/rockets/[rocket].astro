@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "~/layouts/Layout.astro";
+import type { InferGetStaticPropsType } from "astro";
+
+export async function getStaticPaths() {
+	const rockets = await getCollection("rockets");
+
+	return rockets.map((rocket) => {
+		return {
+			params: {
+				rocket: rocket.id,
+			},
+			props: { rocket },
+		};
+	});
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { rocket } = Astro.props;
+---
+
+<Layout title={rocket.data.name}>
+	<h1>{rocket.data.name}</h1>
+	<p>{rocket.data.description}</p>
+
+	<a href="/rockets">Back to rocket list</a>
+</Layout>

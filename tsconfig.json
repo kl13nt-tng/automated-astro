@@ -1,0 +1,22 @@
+{
+	"extends": "astro/tsconfigs/strict",
+	"include": [".astro/types.d.ts", "**/*"],
+	"exclude": ["dist"],
+	"compilerOptions": {
+		"lib": ["DOM"],
+		"jsx": "react-jsx",
+		"jsxImportSource": "react",
+		"plugins": [
+			{
+				"name": "gql.tada/ts-plugin",
+				"schema": "./schema.graphql",
+				"tadaOutputLocation": "./src/graphql-env.d.ts",
+				"trackFieldUsage": false
+			}
+		],
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"]
+		}
+	}
+}
