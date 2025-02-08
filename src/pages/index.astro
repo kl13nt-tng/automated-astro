@@ -1,64 +1,27 @@
 ---
-import { Link } from "~/components/Link";
-import Layout from "~/layouts/Layout.astro";
 import UserAvatar from "~/components/UserAvatar.astro";
-
-import { SampleClientComponent } from "~/components/SampleClientComponent";
-import { SampleClientVisibleComponent } from "~/components/SampleClientVisibleComponent";
-import { SampleClientIdleComponent } from "~/components/SampleClientIdleComponent";
-import { SampleClientOnlyComponent } from "~/components/SampleClientOnlyComponent";
-import { SampleClientRendererComponent } from "~/components/SampleClientRendererComponent";
+import Layout from "~/layouts/Layout.astro";
+// TODO: refactor this later!
 ---
 
 <Layout title="Home sweet home">
-	<h1>This is your home page.</h1>
+	<h1 transition:name="title" transition:animate="slide">Hola, Astro!</h1>
 	<p>
-		This page is statically rendered, except for the user post list below, which
-		is dynamically rendered on the server and streamed as it is rendered to the
-		client.
+		This is a demo page for Server Islands. What you're reading now is generated
+		static HTML.
 	</p>
-
-	<img src="/woody.gif" alt="woody.gif" />
-
 	<UserAvatar server:defer />
 
-	<h2>
-		This may contain other static stuff, client component, hydrated components,
-		etc!
-	</h2>
-
-	<Link href="/rockets">Rockets</Link>
-
-	<p>React component server-rendered static HTML</p>
-	<SampleClientComponent />
-
-	<p>React component client:load</p>
-	<SampleClientComponent client:load>
-		<div slot="fallback">LOADING</div>
-	</SampleClientComponent>
-
-	<p>React component client:only</p>
-	<SampleClientOnlyComponent client:only="react">
-		<div slot="fallback">LOADING</div>
-	</SampleClientOnlyComponent>
-
-	<p>React component client:idle</p>
-	<SampleClientIdleComponent client:idle>
-		<div slot="fallback">LOADING</div>
-	</SampleClientIdleComponent>
-
-	<SampleClientRendererComponent>
-		<h1>This is static Astro HTML passed to my React component as children!</h1>
-	</SampleClientRendererComponent>
-
-	<p>Psst! Scroll down, foo!</p>
-
-	<div style="height: 200vh"></div>
-
-	<img src="/hi-whoa.gif" alt="whoa" />
-
-	<div>
-		<p>React component client:visible</p>
-		<SampleClientVisibleComponent client:visible />
-	</div>
+	<a href="/launches">Check out all launches here</a>
 </Layout>
+
+<script>
+	try {
+		const isPersisted = await navigator.storage.persist();
+		if (isPersisted) {
+			console.log("Storage will not be cleared automatically");
+		}
+	} catch (error) {
+		console.log("Persistent storage denied");
+	}
+</script>

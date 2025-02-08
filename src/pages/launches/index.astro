@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
 
-const rockets = await getCollection("rockets");
+const launches = await getCollection("launches");
 ---
 
 <Layout title="Rockets">
@@ -12,10 +12,10 @@ const rockets = await getCollection("rockets");
 
 	<ul>
 		{
-			rockets.map((rocket) => (
+			launches.map((launch) => (
 				<li>
-					<a href={`/rockets/${rocket.id}`} data-astro-prefetch>
-						{rocket.data.name}
+					<a href={`/launches/${launch.id}`} data-astro-prefetch>
+						{launch.data.mission_name}
 					</a>
 				</li>
 			))

@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "~/layouts/Layout.astro";
+
+const ships = await getCollection("ships");
+---
+
+<Layout title="Rockets">
+	<h1 transition:name="title" transition:animate="slide">Ships everywhere!</h1>
+
+	<ul class="w-full">
+		{
+			ships.map((ship) => (
+				<li class="flex items-center w-full justify-between">
+					<p>id: {ship.data.id}</p>
+					{ship.data.image ? (
+						<img
+							class="w-[200px]"
+							srcset={ship.data.image.srcSet}
+							sizes="(max-width: 900px) 728w, (min-width: 1440px) 1920w"
+						/>
+					) : (
+						<p>I don't have an image :(</p>
+					)}
+				</li>
+			))
+		}
+	</ul>
+
+	<a href="/">Back to homepage</a>
+</Layout>

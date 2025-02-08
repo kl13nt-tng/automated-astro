@@ -1,9 +1,6 @@
-import type { Plugin, ResolvedConfig } from "vite";
+import type { Plugin } from "vite";
 import path from "path";
 import fs from "fs";
-
-// TODO: Add support for custom regex
-// TODO: Add support for custom types with colors through profiles.
 
 type PluginOptions = {
 	/**
@@ -24,12 +21,20 @@ const defaultPluginOptions: Required<PluginOptions> = {
 	types: ["TODO", "FIXME"],
 };
 
+const readFile = async (path: string) => {
+	try {
+		const contents = await fs.promises.readFile(path, "utf-8");
+
+		return contents;
+	} catch (error) {
+		return null;
+	}
+};
+
 export default function vitePluginCheckTodos({
 	types,
 	typeColors,
 } = defaultPluginOptions): Plugin {
-	let config: ResolvedConfig;
-
 	const regex = new RegExp(
 		`\/\/\\s*(?<type>${types.join("|")})\\s*:\\s*(?<content>.+)`,
 		"gim"
@@ -38,16 +43,13 @@ export default function vitePluginCheckTodos({
 	return {
 		name: "vite-plugin-check-todos",
 
-		configResolved(resolvedConfig) {
-			config = resolvedConfig;
-		},
-
 		async load(id) {
-			if (id.includes("node_modules") || !id.startsWith(process.cwd())) {
+			if (id.includes("node_modules")) {
 				return null;
 			}
 
-			const code = await fs.promises.readFile(id, "utf-8");
+			const code = await readFile(id);
+			if (!code) return;
 
 			let match: RegExpExecArray | null;
 

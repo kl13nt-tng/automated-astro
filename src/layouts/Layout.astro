@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import "~/base.css";
+import "~/base.scss";
 
 interface Props {
 	title: string;
@@ -12,14 +12,31 @@ const { title } = Astro.props;
 <!doctype html>
 <html lang="en">
 	<head>
+		<ClientRouter />
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro | {title}</title>
-		<ClientRouter />
+		<title>Astro | {title}</title><link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body>
-		<slot />
+		<nav class="flex gap-2 border-b-[1px] border-gray-700 py-2">
+			<a href="/" class="hover:border-0">home</a>
+			<a href="/demo" class="hover:border-0">demo</a>
+			<a href="/rockets" class="hover:border-0">rockets</a>
+			<a href="/launches" class="hover:border-0">launches</a>
+			<a href="/ships" class="hover:border-0">ships</a>
+		</nav>
+		<main transition:name="main">
+			<slot />
+		</main>
 	</body>
 </html>

@@ -1,0 +1,70 @@
+---
+title: Demo
+---
+
+import Layout from "~/layouts/Layout.astro";
+import ComponentDemo from "~/components/ComponentDemo.astro";
+
+import { SampleClientComponent } from "~/components/SampleClientComponent";
+import { SampleClientVisibleComponent } from "~/components/SampleClientVisibleComponent";
+import { SampleClientIdleComponent } from "~/components/SampleClientIdleComponent";
+import { SampleClientOnlyComponent } from "~/components/SampleClientOnlyComponent";
+import { SampleClientRendererComponent } from "~/components/SampleClientRendererComponent";
+
+<Layout title="Demo time!">
+	<h1 transition:name="title" transition:animate="slide">Hydration
+	Directives</h1>
+
+    ![woody gif](/woody.gif)
+
+    <ComponentDemo>
+    	React component server-rendered static HTML
+    	<SampleClientComponent />
+    </ComponentDemo>
+
+    <ComponentDemo>
+    	`client:load` Load and hydrate the component JavaScript immediately on page load.
+
+    	<SampleClientComponent client:load>
+    		<div slot="fallback">LOADING</div>
+    	</SampleClientComponent>
+    </ComponentDemo>
+
+    <ComponentDemo>
+    	`client:only` skips HTML server rendering, and renders only on the client. It
+    	acts similarly to client:load in that it loads, renders, and hydrates the
+    	component immediately on page load.
+
+    	<SampleClientOnlyComponent client:only="react">
+    		<div slot="fallback">LOADING</div>
+    	</SampleClientOnlyComponent>
+    </ComponentDemo>
+
+    <ComponentDemo>
+    	`client:idle` Lower-priority UI elements that don’t need to be immediately
+    	interactive.
+
+    	<SampleClientIdleComponent client:idle>
+    		<div slot="fallback">LOADING</div>
+    	</SampleClientIdleComponent>
+    </ComponentDemo>
+
+    <ComponentDemo>
+    	<SampleClientRendererComponent>
+    		<p>
+    			This is static Astro HTML passed to my React component as children!
+    		</p>
+    	</SampleClientRendererComponent>
+    </ComponentDemo>
+
+    Psst! Scroll down, foo!
+
+    <div style="height: 200vh"></div>
+
+    <ComponentDemo>
+    	`client:visible` Load and hydrate the component JavaScript once the component has entered the user’s viewport. This uses an IntersectionObserver internally to keep track of visibility.
+
+    	<SampleClientVisibleComponent client:visible />
+    </ComponentDemo>
+
+</Layout>

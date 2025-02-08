@@ -1,0 +1,22 @@
+---
+import { getEntry } from "astro:content";
+import type { RocketFragmentType } from "~/queries.graphql";
+import type { getQueryReturnType, getCollectionEntryType } from "~/types";
+
+// interface Props extends getQueryReturnType<RocketFragmentType> {}
+type Props = getCollectionEntryType<"rockets">;
+const { engines, name } = Astro.props;
+---
+
+<li>
+	<p>{name}</p>
+	{
+		engines && (
+			<Fragment>
+				<span>{engines.propellant_1}</span>
+				<span>{engines.propellant_2}</span>
+				<span>{engines.version}</span>
+			</Fragment>
+		)
+	}
+</li>

@@ -21,7 +21,7 @@ const { rocket } = Astro.props;
 ---
 
 <Layout title={rocket.data.name}>
-	<h1>{rocket.data.name}</h1>
+	<h1 transition:name="title" transition:animate="slide">{rocket.data.name}</h1>
 	<p>{rocket.data.description}</p>
 
 	<a href="/rockets">Back to rocket list</a>
