@@ -11,7 +11,7 @@ import sitemap from "@astrojs/sitemap";
 import netlify from "@astrojs/netlify";
 
 export default defineConfig({
-	site: "http://localhost:3000",
+	site: process.env.SITE,
 	prefetch: true,
 	output: "static",
 	integrations: [react(), mdx(), sitemap()],
@@ -29,6 +29,11 @@ export default defineConfig({
 				optional: false,
 			}),
 			REVALIDATION_TOKEN: envField.string({
+				context: "server",
+				access: "secret",
+				optional: false,
+			}),
+			SITE: envField.string({
 				context: "server",
 				access: "secret",
 				optional: false,
