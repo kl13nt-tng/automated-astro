@@ -30,8 +30,13 @@ Astro.response.headers.set("netlify-cache-tag", "launches");
 	</h1>
 
 	<p>This page was last rendered at {new Date().toISOString()}</p>
-	<p>To revalidate this page, execute the following command:</p>
+	<div class="flex gap-2 items-center">
+		<p class="my-4">To revalidate this page, execute the following command:</p>
+		<button id="revalidate" class="block">Revalidate</button>
+	</div>
+
 	<pre
+		class="mt-4"
 		set:html={`curl '${Astro.site}/api/revalidate?token=123&tag=launches' -X POST`}
 	/>
 
@@ -49,3 +54,13 @@ Astro.response.headers.set("netlify-cache-tag", "launches");
 
 	<a href="/">Back to homepage</a>
 </Layout>
+
+<script>
+	import { SITE } from "astro:env/client";
+
+	document.querySelector("#revalidate")!.addEventListener("click", async () => {
+		await fetch(`${SITE}/api/revalidate?token=123&tag=launches`, {
+			method: "post",
+		});
+	});
+</script>

@@ -34,8 +34,8 @@ export default defineConfig({
 				optional: false,
 			}),
 			SITE: envField.string({
-				context: "server",
-				access: "secret",
+				context: "client",
+				access: "public",
 				optional: false,
 			}),
 		},
