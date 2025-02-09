@@ -1,7 +1,9 @@
 ---
+import ComponentDemo from "~/components/ComponentDemo.astro";
+import { OpenInEditor } from "~/components/OpenInEditor";
+import { SampleClientRendererComponent } from "~/components/SampleClientRendererComponent";
 import UserAvatar from "~/components/UserAvatar.astro";
 import Layout from "~/layouts/Layout.astro";
-// TODO: refactor this later!
 ---
 
 <Layout title="Home sweet home">
@@ -10,9 +12,20 @@ import Layout from "~/layouts/Layout.astro";
 		This is a demo page for Server Islands. What you're reading now is generated
 		static HTML.
 	</p>
+
 	<UserAvatar server:defer />
 
-	<a href="/launches">Check out all launches here</a>
+	<OpenInEditor file={import.meta.filename} client:load />
+
+	<ComponentDemo>
+		<SampleClientRendererComponent>
+			<p class="mb-0">
+				This is static Astro HTML passed to my React component as children!
+			</p>
+		</SampleClientRendererComponent>
+	</ComponentDemo>
+
+	<a href="/launches" class="mt-4 block w-fit">Check out all launches here</a>
 </Layout>
 
 <script>

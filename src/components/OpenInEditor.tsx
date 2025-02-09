@@ -4,7 +4,10 @@ interface Props {
 
 export const OpenInEditor = ({ file }: Props) => {
 	return (
-		<button onClick={() => fetch(`/__open-in-editor?file=${file}`)}>
+		<button
+			onClick={() => fetch(`/__open-in-editor?file=${file}`)}
+			className="block"
+		>
 			Check it out
 		</button>
 	);

@@ -1,20 +1,25 @@
-import { cache } from "page-cache";
+import { REVALIDATION_TOKEN } from "astro:env/server";
+import { purgeCache } from "@netlify/functions";
+import type { APIRoute } from "astro";
 
-export async function GET(request: Request) {
-	const url = new URL(request.url);
-	const path = url.searchParams.get("path");
+export const prerender = false;
 
-	if (!path) {
-		return new Response("Missing path parameter", { status: 400 });
+export const GET: APIRoute = async (request) => {
+	const { searchParams } = new URL(request.url);
+	const token = searchParams.get("token");
+	const tag = searchParams.get("tag");
+
+	if (token !== REVALIDATION_TOKEN) {
+		return new Response("Unauthorized", { status: 401 });
 	}
 
-	try {
-		console.log(`Revalidating ${path}`);
-		cache.delete(path);
-
-		return new Response("Page revalidated successfully", { status: 200 });
-	} catch (error) {
-		console.error("Revalidation error:", error);
-		return new Response("Revalidation failed", { status: 500 });
+	if (!tag) {
+		return new Response("Missing tag", { status: 400 });
 	}
-}
+
+	await purgeCache({ tags: [tag] });
+
+	return new Response(`Revalidated entry with tag ${tag}`, {
+		status: 200,
+	});
+};

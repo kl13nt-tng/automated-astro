@@ -15,6 +15,21 @@ export const launchesQuery = graphql(
 	`
 );
 
+export const launchQuery = graphql(
+	`
+		query LaunchQuery($id: ID!) {
+			launch(id: $id) {
+				details
+				id
+				launch_date_local
+				launch_date_unix
+				launch_date_utc
+				mission_name
+			}
+		}
+	`
+);
+
 const RocketFragment = graphql(`
 	fragment RocketFragment on Rocket {
 		engines {

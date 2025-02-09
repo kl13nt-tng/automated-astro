@@ -1,4 +1,5 @@
 ---
+import { Image, Picture } from "astro:assets";
 import { getCollection } from "astro:content";
 import Layout from "~/layouts/Layout.astro";
 
@@ -14,10 +15,16 @@ const ships = await getCollection("ships");
 				<li class="flex items-center w-full justify-between">
 					<p>id: {ship.data.id}</p>
 					{ship.data.image ? (
-						<img
-							class="w-[200px]"
-							srcset={ship.data.image.srcSet}
-							sizes="(max-width: 900px) 728w, (min-width: 1440px) 1920w"
+						// I'm lazy by default!
+						// Can infer sizes on my own :)
+						<Picture
+							inferSize
+							src={ship.data.image}
+							formats={["avif", "webp"]}
+							alt="A nice ship :)"
+							class="w-[200px] max-h-[150px] object-cover"
+							widths={[200]}
+							quality={80}
 						/>
 					) : (
 						<p>I don't have an image :(</p>

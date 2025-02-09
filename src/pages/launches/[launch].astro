@@ -1,38 +1,45 @@
 ---
-import { getCollection } from "astro:content";
+export const prerender = false;
+
 import Layout from "~/layouts/Layout.astro";
-import { OpenInEditor } from "~/components/OpenInEditor";
-import type { InferGetStaticPropsType } from "astro";
+import { apolloClient } from "~/apollo-client";
+import { launchQuery } from "~/queries.graphql";
 
-export async function getStaticPaths() {
-	const launches = await getCollection("launches");
+const { launch: launchId } = Astro.params;
 
-	return launches.map((launch) => {
-		return {
-			params: {
-				launch: launch.id,
-			},
-			props: {
-				launch: launch.data,
-			},
-		};
-	});
+if (launchId === undefined) {
+	return Astro.redirect("/404");
 }
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-const { launch } = Astro.props;
+const { data } = await apolloClient.query({
+	query: launchQuery,
+	variables: { id: launchId },
+});
+
+if (!data.launch) {
+	return Astro.redirect("/404");
+}
+
+const launch = data.launch;
+
+// The browser should always check freshness
+Astro.response.headers.set(
+	"cache-control",
+	"public, max-age=0, must-revalidate"
+);
+
+// The CDN should cache for a year, but revalidate if the cache tag changes
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+
+// Tag the page with the book ID
+Astro.response.headers.set("netlify-cache-tag", launchId);
 ---
 
-<Layout title={launch.mission_name}>
+<Layout title={launch.mission_name!}>
 	<h1 transition:name="title" transition:animate="slide">
 		{launch.mission_name}
 	</h1>
 	<p>{launch.details}</p>
-
-	<blockquote>
-		<OpenInEditor file={`${import.meta.filename}:22`} client:load />
-		<p>You can infer each dynamic route's props automatically!</p>
-	</blockquote>
 
 	<a href="/launches">Back to launch list</a>
 </Layout>

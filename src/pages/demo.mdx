@@ -1,7 +1,3 @@
----
-title: Demo
----
-
 import Layout from "~/layouts/Layout.astro";
 import ComponentDemo from "~/components/ComponentDemo.astro";
 
@@ -10,6 +6,7 @@ import { SampleClientVisibleComponent } from "~/components/SampleClientVisibleCo
 import { SampleClientIdleComponent } from "~/components/SampleClientIdleComponent";
 import { SampleClientOnlyComponent } from "~/components/SampleClientOnlyComponent";
 import { SampleClientRendererComponent } from "~/components/SampleClientRendererComponent";
+import { Image } from "~/components/Image";
 
 <Layout title="Demo time!">
 	<h1 transition:name="title" transition:animate="slide">Hydration
@@ -49,13 +46,6 @@ import { SampleClientRendererComponent } from "~/components/SampleClientRenderer
     	</SampleClientIdleComponent>
     </ComponentDemo>
 
-    <ComponentDemo>
-    	<SampleClientRendererComponent>
-    		<p>
-    			This is static Astro HTML passed to my React component as children!
-    		</p>
-    	</SampleClientRendererComponent>
-    </ComponentDemo>
 
     Psst! Scroll down, foo!
 
@@ -66,5 +56,12 @@ import { SampleClientRendererComponent } from "~/components/SampleClientRenderer
 
     	<SampleClientVisibleComponent client:visible />
     </ComponentDemo>
+
+    <div style="height: 60px"></div>
+
+    <ComponentDemo>
+    		We can optimise images in a different number of ways. Astro `<Image>`, `<Picture>`, and `getImage()`. `getImage()` even works in React server components.
+    		<Image />
+    	</ComponentDemo>
 
 </Layout>

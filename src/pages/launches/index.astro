@@ -1,8 +1,27 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "~/layouts/Layout.astro";
+export const prerender = false;
 
-const launches = await getCollection("launches");
+import Layout from "~/layouts/Layout.astro";
+import { apolloClient } from "~/apollo-client";
+import { launchesQuery } from "~/queries.graphql";
+
+const { data } = await apolloClient.query({
+	query: launchesQuery,
+});
+
+if (!data.launches) {
+	return Astro.redirect("/404");
+}
+
+const launches = data.launches.filter((launch) => launch !== null);
+
+Astro.response.headers.set(
+	"cache-control",
+	"public, max-age=0, must-revalidate"
+);
+
+Astro.response.headers.set("netlify-cdn-cache-control", "s-maxage=31536000");
+Astro.response.headers.set("netlify-cache-tag", "launches");
 ---
 
 <Layout title="Rockets">
@@ -10,12 +29,18 @@ const launches = await getCollection("launches");
 		My fun rocket list!
 	</h1>
 
+	<p>This page was last rendered at {new Date().toISOString()}</p>
+	<p>To revalidate this page, execute the following command:</p>
+	<pre
+		set:html={`curl '${Astro.site}/api/revalidate?token=123&tag=launches' -X POST`}
+	/>
+
 	<ul>
 		{
 			launches.map((launch) => (
 				<li>
 					<a href={`/launches/${launch.id}`} data-astro-prefetch>
-						{launch.data.mission_name}
+						{launch.mission_name}
 					</a>
 				</li>
 			))

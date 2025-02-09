@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "~/layouts/Layout.astro";
 import type { InferGetStaticPropsType } from "astro";
+
+import Layout from "~/layouts/Layout.astro";
+import { OpenInEditor } from "~/components/OpenInEditor";
 
 export async function getStaticPaths() {
 	const rockets = await getCollection("rockets");
@@ -23,6 +25,11 @@ const { rocket } = Astro.props;
 <Layout title={rocket.data.name}>
 	<h1 transition:name="title" transition:animate="slide">{rocket.data.name}</h1>
 	<p>{rocket.data.description}</p>
+
+	<blockquote>
+		<OpenInEditor file={`${import.meta.filename}:22`} client:load />
+		<p>You can infer each dynamic route's props automatically!</p>
+	</blockquote>
 
 	<a href="/rockets">Back to rocket list</a>
 </Layout>

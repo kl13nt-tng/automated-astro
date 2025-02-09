@@ -1,25 +1,18 @@
 import { defineCollection, z } from "astro:content";
 
-import { ApolloClient, InMemoryCache } from "@apollo/client/core/core.cjs";
 import { readFragment } from "gql.tada";
 import {
-	launchesQuery,
 	rocketsQuery,
 	shipsQuery,
 	type RocketFragmentType,
 } from "./queries.graphql";
 import { getImage } from "astro:assets";
-import { API_URL } from "astro:env/server";
-
-const client = new ApolloClient({
-	uri: API_URL,
-	cache: new InMemoryCache(),
-});
+import { apolloClient } from "./apollo-client";
 
 const rockets = defineCollection({
 	type: "content_layer",
 	loader: async () => {
-		const { data } = await client.query({
+		const { data } = await apolloClient.query({
 			query: rocketsQuery,
 			variables: { limit: 500 },
 		});
@@ -53,43 +46,10 @@ const rockets = defineCollection({
 	}),
 });
 
-const launches = defineCollection({
-	type: "content_layer",
-	loader: async () => {
-		const { data } = await client.query({
-			query: launchesQuery,
-			variables: { limit: 200 },
-		});
-
-		if (!data.launches) {
-			return [];
-		}
-
-		const mapped = data.launches
-			.filter((launch): launch is NonNullable<typeof launch> => launch !== null)
-			.map((launch) => {
-				return {
-					...launch,
-					id: launch.id!,
-				};
-			});
-
-		return mapped;
-	},
-	schema: z.object({
-		id: z.string(),
-		details: z.string().nullable(),
-		launch_date_local: z.string(),
-		launch_date_unix: z.number(),
-		launch_date_utc: z.string(),
-		mission_name: z.string(),
-	}),
-});
-
 const ships = defineCollection({
 	type: "content_layer",
 	loader: async () => {
-		const { data } = await client.query({
+		const { data } = await apolloClient.query({
 			query: shipsQuery,
 			variables: { limit: 10 },
 		});
@@ -107,47 +67,50 @@ const ships = defineCollection({
 				};
 			});
 
-		const promises = mapped.map(async (ship) => {
-			if (!ship.image) return ship;
+		return mapped;
 
-			/**
-			 * CMS's usually respond w/ image sizes, which can be passed in to avoid
-			 * CLS. I'm assuming values here since the API I'm using only returns links.
-			 */
-			try {
-				const desktopImg = await getImage({
-					src: ship.image,
-					format: "webp",
-					inferSize: true,
-					quality: 80,
-					widths: [728, 1440, 1920],
-				});
+		// const promises = mapped.map(async (ship) => {
+		// 	if (!ship.image) return ship;
 
-				return {
-					...ship,
-					image: {
-						srcSet: desktopImg.srcSet.attribute,
-						src: desktopImg.src,
-					},
-				};
-			} catch (error) {
-				return ship;
-			}
-		});
+		// 	/**
+		// 	 * CMS's usually respond w/ image sizes, which can be passed in to avoid
+		// 	 * CLS. I'm asking Astro to infer the values here since the API I'm using only returns links.
+		// 	 */
+		// 	try {
+		// 		const desktopImg = await getImage({
+		// 			src: ship.image,
+		// 			format: "webp",
+		// 			inferSize: true,
+		// 			quality: 80,
+		// 			widths: [728, 1440, 1920],
+		// 		});
 
-		const resolved = await Promise.all(promises);
+		// 		return {
+		// 			...ship,
+		// 			image: {
+		// 				srcSet: desktopImg.srcSet.attribute,
+		// 				src: desktopImg.src,
+		// 			},
+		// 		};
+		// 	} catch (error) {
+		// 		return {
+		// 			...ship,
+		// 			image: {
+		// 				srcSet: ship.image,
+		// 				src: ship.image,
+		// 			},
+		// 		};
+		// 	}
+		// });
 
-		return resolved;
+		// const resolved = await Promise.all(promises);
+
+		// return resolved;
 	},
 	schema: z.object({
 		id: z.string(),
-		image: z
-			.object({
-				srcSet: z.string(),
-				src: z.string(),
-			})
-			.nullable(),
+		image: z.string().nullable(),
 	}),
 });
 
-export const collections = { rockets, launches, ships };
+export const collections = { rockets, ships };
