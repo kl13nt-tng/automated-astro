@@ -3,12 +3,12 @@ import { defineConfig, envField } from "astro/config";
 
 import react from "@astrojs/react";
 
-import node from "@astrojs/node";
 import vitePluginCheckTodos from "./vite-plugin-check-todos.ts";
 
 import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
+import netlify from "@astrojs/netlify";
 
 export default defineConfig({
 	site: "http://localhost:3000",
@@ -35,7 +35,5 @@ export default defineConfig({
 			}),
 		},
 	},
-	adapter: node({
-		mode: "standalone",
-	}),
+	adapter: netlify(),
 });
