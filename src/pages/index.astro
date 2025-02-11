@@ -1,7 +1,5 @@
 ---
-import ComponentDemo from "~/components/ComponentDemo.astro";
 import { OpenInEditor } from "~/components/OpenInEditor";
-import { SampleClientRendererComponent } from "~/components/SampleClientRendererComponent";
 import UserAvatar from "~/components/UserAvatar.astro";
 import Layout from "~/layouts/Layout.astro";
 ---
@@ -15,18 +13,13 @@ import Layout from "~/layouts/Layout.astro";
 
 	<UserAvatar server:defer />
 
+	<p>By the end of this, you'll likely do the following to Next:</p>
+	<img src="/woody.gif" alt="wood woody" />
+
 	<OpenInEditor file={import.meta.filename} client:load />
-
-	<ComponentDemo>
-		<SampleClientRendererComponent>
-			<p class="mb-0">
-				This is static Astro HTML passed to my React component as children!
-			</p>
-		</SampleClientRendererComponent>
-	</ComponentDemo>
-
-	<a href="/launches" class="mt-4 block w-fit">Check out all launches here</a>
 </Layout>
+
+<a href="/launches" class="mt-4 block w-fit">Check out all launches here</a>
 
 <script>
 	try {
