@@ -9,10 +9,15 @@ import { SampleClientRendererComponent } from "~/components/SampleClientRenderer
 import { Image } from "~/components/Image";
 
 <Layout title="Demo time!">
-	<h1 transition:name="title" transition:animate="slide">Hydration
-	Directives</h1>
+	<h1 transition:name="title" transition:animate="slide">Islands and directives</h1>
 
-    ![woody gif](/woody.gif)
+    	<img src="/Islands architecture Docs.png" />
+
+    <ComponentDemo>
+    	<SampleClientRendererComponent>
+    		<p class="mb-0">This is static Astro HTML passed to my React component as children!</p>
+    	</SampleClientRendererComponent>
+    	</ComponentDemo>
 
     <ComponentDemo>
     	React component server-rendered static HTML

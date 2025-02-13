@@ -6,7 +6,6 @@ import {
 	shipsQuery,
 	type RocketFragmentType,
 } from "./queries.graphql";
-import { getImage } from "astro:assets";
 import { apolloClient } from "./apollo-client";
 
 const rockets = defineCollection({
@@ -68,44 +67,6 @@ const ships = defineCollection({
 			});
 
 		return mapped;
-
-		// const promises = mapped.map(async (ship) => {
-		// 	if (!ship.image) return ship;
-
-		// 	/**
-		// 	 * CMS's usually respond w/ image sizes, which can be passed in to avoid
-		// 	 * CLS. I'm asking Astro to infer the values here since the API I'm using only returns links.
-		// 	 */
-		// 	try {
-		// 		const desktopImg = await getImage({
-		// 			src: ship.image,
-		// 			format: "webp",
-		// 			inferSize: true,
-		// 			quality: 80,
-		// 			widths: [728, 1440, 1920],
-		// 		});
-
-		// 		return {
-		// 			...ship,
-		// 			image: {
-		// 				srcSet: desktopImg.srcSet.attribute,
-		// 				src: desktopImg.src,
-		// 			},
-		// 		};
-		// 	} catch (error) {
-		// 		return {
-		// 			...ship,
-		// 			image: {
-		// 				srcSet: ship.image,
-		// 				src: ship.image,
-		// 			},
-		// 		};
-		// 	}
-		// });
-
-		// const resolved = await Promise.all(promises);
-
-		// return resolved;
 	},
 	schema: z.object({
 		id: z.string(),

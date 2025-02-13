@@ -4,7 +4,7 @@ import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-export const GET: APIRoute = async (request) => {
+export const POST: APIRoute = async (request) => {
 	const { searchParams } = new URL(request.url);
 	const token = searchParams.get("token");
 	const tag = searchParams.get("tag");

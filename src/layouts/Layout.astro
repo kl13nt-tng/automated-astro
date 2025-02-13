@@ -1,12 +1,24 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { NavUser } from "~/components/NavUser";
+import { NavItems } from "~/components/NavItems";
+import { navItemsStore } from "~/stores/nav";
 import "~/base.scss";
 
 interface Props {
 	title: string;
 }
 
+const simulatedLoadNavItems = () => {
+	return new Promise((resolve) =>
+		setTimeout(() => resolve(["ssg-store-init"]), 100)
+	);
+};
+
 const { title } = Astro.props;
+
+const navItems = (await simulatedLoadNavItems()) as string[];
+navItemsStore.set({ navItems });
 ---
 
 <!doctype html>
@@ -34,6 +46,8 @@ const { title } = Astro.props;
 			<a href="/rockets" class="hover:border-0">rockets</a>
 			<a href="/launches" class="hover:border-0">launches</a>
 			<a href="/ships" class="hover:border-0">ships</a>
+			<NavUser client:load />
+			<NavItems client:load />
 		</nav>
 		<main transition:name="main" class="mt-8">
 			<slot />

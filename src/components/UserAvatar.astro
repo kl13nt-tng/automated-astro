@@ -1,5 +1,4 @@
 ---
-const referer = Astro.request.headers.get("Referer");
 const userIdCookie = Astro.cookies.get("userId");
 
 if (!userIdCookie) return;
