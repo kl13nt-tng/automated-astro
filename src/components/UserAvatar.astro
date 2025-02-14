@@ -1,4 +1,6 @@
 ---
+import { TestConsoleComponent } from "./TestConsoleComponent";
+
 const userIdCookie = Astro.cookies.get("userId");
 
 if (!userIdCookie) return;
@@ -18,4 +20,19 @@ const loadUserProfile = () => {
 const user = await loadUserProfile();
 ---
 
-{user && <p>Welcome back, {user.name}</p>}
+{
+	user && (
+		<Fragment>
+			<TestConsoleComponent client:load />
+			<p
+				class:list={{
+					"font-bold": true,
+					"text-2xl": true,
+					"mt-4": true,
+				}}
+			>
+				Welcome back, {user.name}{" "}
+			</p>
+		</Fragment>
+	)
+}
